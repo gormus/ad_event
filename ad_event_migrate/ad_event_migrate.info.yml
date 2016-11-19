@@ -1,0 +1,9 @@
+name: Migrate Berkeley Events
+type: module
+description: Migrate helper to import selected UC Berkeley Events.
+core: 8.x
+package: UC Berkeley A+D
+dependencies:
+  - ad_event
+  - migrate_plus # (=8.x-2.x-dev) # Also patch with: https://www.drupal.org/node/2785717#comment-11521871
+  - migrate_tools

@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_event_rrule
+    - node.type.ad_event
+id: node.ad_event.field_event_rrule
+field_name: field_event_rrule
+entity_type: node
+bundle: ad_event
+label: 'Recurrence Rules'
+description: 'Keep recurrence rules in this field. It will be used for filtering events while searching. DO NOT EDIT.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

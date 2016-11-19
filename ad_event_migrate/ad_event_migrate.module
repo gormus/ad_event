@@ -1,0 +1,61 @@
+<?php
+
+/**
+ * @file
+ * Migrate Berkeley Events module.
+ */
+
+use Drupal\migrate\Plugin\MigrationInterface;
+use Drupal\migrate\Plugin\MigrateSourceInterface;
+use Drupal\migrate\Row;
+
+/**
+ * Implements hook_migrate_prepare_row().
+ */
+function ad_event_migrate_migrate_prepare_row(Row $row, MigrateSourceInterface $source, MigrationInterface $migration) {
+  if ($migration->id() == 'ad_events') {
+    // \Drupal::logger('ad_event_migrate')->debug('<pre>' . print_r($row, TRUE) . '</pre>');
+
+    // Fix Event Image URL.
+    //
+    // Some of the images have fully qualified URLs, while others simply have paths relative to the root. We have to
+    // standardize all and convert into fully qualified URLs.
+    $image_url = $row->getSourceProperty('event_image_url');
+    $ucb_events_domain = 'http://events.berkeley.edu';
+
+    if ($image_url) {
+      if (substr($image_url, 0, 1) === '/') {
+        $image_url = $ucb_events_domain . $image_url;
+        $row->setSourceProperty('event_image_url', $image_url);
+      }
+
+      // Image ALT text.
+      // Use event title in absence of `event_image_title`.
+      $image_alt = $row->getSourceProperty('event_image_title');
+      if (empty($image_alt)) {
+        $event_title = $row->getSourceProperty('event_title');
+        $row->setSourceProperty('event_image_title', $event_title);
+      }
+    }
+
+    // Fix Date & Time Values.
+    //
+    // Events.Berkeley.edu keeps dates in `America/Los_Angeles` timezone. If we save those dates as they are, they will
+    // be converted to UTC, then again while displaying to America/Los_Angeles. So, we have to convert feed dates to `UTC`,
+    // and import them as `UTC`. Drupal will correct them while rendering.
+    $remote_date = $row->getSourceProperty('event_startdate');
+    $remote_time = $row->getSourceProperty('event_starttime');
+    $remote_tz = 'America/Los_Angeles';
+    // Drupal always stores dates in UTC.
+    $local_tz = new DateTimeZone('UTC');
+
+    $remote_datetime = new DateTime("$remote_date $remote_time", new DateTimeZone($remote_tz));
+    // $remote_datetime_str = $remote_datetime->format('Y-m-d H:i:s');
+    // echo $remote_datetime_str . "\n";
+    $local_datetime = $remote_datetime->setTimezone($local_tz);
+    // echo $local_datetime->format('Y-m-d H:i:sP');
+
+    $row->setSourceProperty('event_startdate', $local_datetime->format('Y-m-d'));
+    $row->setSourceProperty('event_starttime', $local_datetime->format('H:i:s'));
+  }
+}

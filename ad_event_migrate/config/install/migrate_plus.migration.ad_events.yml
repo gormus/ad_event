@@ -1,0 +1,191 @@
+id: ad_events
+label: A+D Events
+migration_group: ucb_events
+dependencies:
+  # config:
+  #   - migrate.migration.berkeley_events
+  module:
+    - node
+source:
+  # We use the XML source plugin.
+  plugin: url
+  data_fetcher_plugin: http
+  data_parser_plugin: xml
+  item_selector: /LiveExport/Event
+  urls:
+    - http://events.berkeley.edu/index.php/live_export/sn/adi.html?view=quick&timeframe=range&startdate=2015-08-08&enddate=&filter=Secondary%20Event%20Type&shortandfulldescription=yes&filtersel=1905 # Visual Arts
+    - http://events.berkeley.edu/index.php/live_export/sn/adi.html?view=quick&timeframe=range&startdate=2015-08-08&enddate=&filter=Secondary%20Event%20Type&shortandfulldescription=yes&filtersel=1906 # Performing Arts
+    - http://events.berkeley.edu/index.php/live_export/sn/adi.html?view=quick&timeframe=range&startdate=2015-08-08&enddate=&filter=Secondary%20Event%20Type&shortandfulldescription=yes&filtersel=1907 # Literature
+    - http://events.berkeley.edu/index.php/live_export/sn/adi.html?view=quick&timeframe=range&startdate=2015-08-08&enddate=&filter=Secondary%20Event%20Type&shortandfulldescription=yes&filtersel=1908 # Film
+    - http://events.berkeley.edu/index.php/live_export/sn/adi.html?view=quick&timeframe=range&startdate=2015-08-08&enddate=&filter=Secondary%20Event%20Type&shortandfulldescription=yes&filtersel=1909 # Design
+  track_changes: true
+  fields:
+    -
+      name: event_id
+      label: Event ID
+      selector: ID
+    -
+      name: event_title
+      label: Title
+      selector: Title
+    -
+      name: event_subtitle
+      label: Sub-title
+      selector: EventSubtitle
+    -
+      name: event_startdate
+      label: Event start date
+      selector: DateTime/StartDate
+    -
+      name: event_starttime
+      label: Event start time
+      selector: DateTime/StartTime
+    -
+      name: event_endtime
+      label: Event end time
+      selector: DateTime/EndTime
+    -
+      name: event_location_name
+      label: Location name
+      selector: Locations/Location/LocationName
+    -
+      name: event_location_type
+      label: Location type
+      selector: Locations/Location/LocationTypes/LocationType
+    -
+      name: event_location_address_postbox
+      label: Location address: Postbox
+      selector: Locations/Location/Address/Postbox
+    -
+      name: event_location_address_room
+      label: Location address: Room
+      selector: Locations/Location/Address/Room
+    -
+      name: event_location_address_street_name
+      label: Location address: StreetName
+      selector: Locations/Location/Address/StreetName
+    -
+      name: event_location_address_buildingname
+      label: Location address: BuildingName
+      selector: Locations/Location/Address/BuildingName
+    -
+      name: event_location_address_city
+      label: Location address: City
+      selector: Locations/Location/Address/CityName
+    -
+      name: event_location_address_postalzone
+      label: Location address: PostalZone
+      selector: Locations/Location/Address/PostalZone
+    -
+      name: event_location_address_country
+      label: Location address: Country
+      selector: Locations/Location/Address/CountrySubentityCode
+    -
+      name: event_description
+      label: Description
+      selector: Description
+    -
+      name: event_shortdescription
+      label: Summary
+      selector: ShortDescription
+    -
+      name: event_refreshments
+      label: Refreshments
+      selector: Refreshments
+    -
+      name: event_webpage_url
+      label: Webpage URL
+      selector: WebPages/WebPage/URL
+    -
+      name: event_webpage_title
+      label: Webpage title
+      selector: WebPages/WebPage/Title
+    -
+      name: event_image_url
+      label: Image URL
+      selector: Images/Image/URL
+    -
+      name: event_image_title
+      label: Image title
+      selector: Images/Image/Title
+    -
+      name: event_enddate
+      label: Event end date
+      selector: RecurrenceRules/Rule/Until/Date
+  ids:
+    event_id:
+      type: string
+  constants:
+    picture_directory: public://ad_events/
+destination:
+  plugin: entity:node
+process:
+  type:
+    plugin: default_value
+    default_value: ad_event
+  title: event_title
+  langcode:
+    plugin: default_value
+    default_value: und
+  uid:
+    plugin: default_value
+    default_value: 1
+  sticky:
+    plugin: default_value
+    default_value: 0
+  created: entry_date
+
+  field_event_id: event_id
+  field_event_subtitle: event_subtitle
+  field_event_startdate:
+    plugin: concat
+    source:
+      - event_startdate
+      - event_starttime
+    delimiter: T
+
+  field_event_enddate:
+    -
+      plugin: concat
+      source:
+        - event_enddate
+        - event_endtime
+      delimiter: T
+    -
+      plugin: skip_on_empty
+      method: process
+      source: field_event_enddate
+
+  'field_event_link/title': event_webpage_title
+  'field_event_link/uri': event_webpage_url
+
+
+  # From https://www.example.com/images/user_uploads/an-event-image.jpg, generate a destination_basename of an-event-image.jpg.
+  destination_basename:
+    plugin: callback
+    callable: basename
+    source: event_image_url
+  # ...and on to a destination_path of public://ad_events/an-event-image.jpg.
+  destination_path:
+    plugin: concat
+    source:
+      - 'constants/picture_directory'
+      - '@destination_basename'
+  field_event_image:
+    -
+      plugin: skip_on_empty
+      method: process
+      source: event_image_url
+    -
+      plugin: file_copy
+      source:
+        - event_image_url
+        - '@destination_path'
+    -
+      plugin: entity_generate
+
+  'body/value': event_description
+  'body/summary': event_shortdescription
+  'body/format':
+    plugin: default_value
+    default_value: 'full_html'

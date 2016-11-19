@@ -1,0 +1,165 @@
+<?php
+
+/**
+ * Implements hook_schema().
+ */
+//function ad_event_migrate_schema() {
+//  $schema['ad_event_migrate_berkeley_events'] = ad_event_migrate_schema_berkeley_events();
+//  return $schema;
+//}
+
+//function ad_event_migrate_schema_berkeley_events() {
+//  return [
+//    'description' => 'Berkeley Events',
+//    'fields' => [
+//      'eventid'  => [
+//        'type' => 'int',
+//        'unsigned' => TRUE,
+//        'not null' => TRUE,
+//        'description' => 'Event ID',
+//      ],
+//      'title' => [
+//        'type' => 'varchar',
+//        'length' => 255,
+//        'not null' => TRUE,
+//        'description' => 'Event title.',
+//      ],
+//      'subtitle' => [
+//        'type' => 'varchar',
+//        'length' => 255,
+//        'not null' => FALSE,
+//        'description' => 'Event subtitle.',
+//      ],
+//      'start_date' => [
+//        'type' => 'varchar',
+//        'length' => 20,
+//        'not null' => FALSE,
+//        'description' => 'Event start date.',
+//      ],
+//      'start_time' => [
+//        'type' => 'varchar',
+//        'length' => 20,
+//        'not null' => FALSE,
+//        'description' => 'Event start time.',
+//      ],
+//      'end_time' => [
+//        'type' => 'varchar',
+//        'length' => 20,
+//        'not null' => FALSE,
+//        'description' => 'Event end time.',
+//      ],
+//      'location_name' => [
+//        'type' => 'varchar',
+//        'length' => 255,
+//        'not null' => FALSE,
+//        'description' => 'Event location name.',
+//      ],
+//      'location_type' => [
+//        'type' => 'varchar',
+//        'length' => 255,
+//        'not null' => FALSE,
+//        'description' => 'Event location type.',
+//      ],
+//      'location_address_postbox' => [
+//        'type' => 'varchar',
+//        'length' => 255,
+//        'not null' => FALSE,
+//        'description' => 'Event location address: Postbox.',
+//      ],
+//      'location_address_room' => [
+//        'type' => 'varchar',
+//        'length' => 255,
+//        'not null' => FALSE,
+//        'description' => 'Event location address: Room.',
+//      ],
+//      'location_address_street_name' => [
+//        'type' => 'varchar',
+//        'length' => 255,
+//        'not null' => FALSE,
+//        'description' => 'Event location address: StreetName.',
+//      ],
+//      'location_address_buildingname' => [
+//        'type' => 'varchar',
+//        'length' => 255,
+//        'not null' => FALSE,
+//        'description' => 'Event location address: BuildingName.',
+//      ],
+//      'location_address_city' => [
+//        'type' => 'varchar',
+//        'length' => 255,
+//        'not null' => FALSE,
+//        'description' => 'Event location address: City.',
+//      ],
+//      'location_address_postalzone' => [
+//        'type' => 'varchar',
+//        'length' => 255,
+//        'not null' => FALSE,
+//        'description' => 'Event location address: PostalZone.',
+//      ],
+//      'location_address_country' => [
+//        'type' => 'varchar',
+//        'length' => 255,
+//        'not null' => FALSE,
+//        'description' => 'Event location address: Country.',
+//      ],
+//      'location_description' => [
+//        'type' => 'text',
+//        'not null' => TRUE,
+//        'size' => 'big',
+//        'description' => 'Event description.',
+//      ],
+//      'location_shortdescription' => [
+//        'type' => 'text',
+//        'not null' => TRUE,
+//        'size' => 'big',
+//        'description' => 'Event summary.',
+//      ],
+//      'location_refreshments' => [
+//        'type' => 'text',
+//        'not null' => TRUE,
+//        'size' => 'big',
+//        'description' => 'Event refreshments. WHAT IS THIS?',
+//      ],
+//      'location_webpage_url' => [
+//        'type' => 'varchar',
+//        'length' => 2048,
+//        'not null' => FALSE,
+//        'description' => 'Event webpage URL.',
+//      ],
+//      'location_webpage_title' => [
+//        'type' => 'varchar',
+//        'length' => 255,
+//        'not null' => FALSE,
+//        'description' => 'Event webpage title.',
+//      ],
+//      'location_image_url' => [
+//        'type' => 'varchar',
+//        'length' => 2048,
+//        'not null' => FALSE,
+//        'description' => 'Event image URL.',
+//      ],
+//      'location_image_title' => [
+//        'type' => 'varchar',
+//        'length' => 255,
+//        'not null' => FALSE,
+//        'description' => 'Event image title.',
+//      ],
+//    ],
+//    'primary key' => array('eventid'),
+//  ];
+//}
+
+/**
+ * Implements hook_install().
+ */
+//function ad_event_migrate_install() {
+//  ad_event_migrate_schema_berkeley_events();
+//}
+
+/**
+ * Implements hook_uninstall().
+ */
+function ad_event_migrate_uninstall() {
+  \Drupal::configFactory()->getEditable('migrate_plus.migration.ad_events')->delete();
+  \Drupal::configFactory()->getEditable('migrate_plus.migration_group.ucb_events')->delete();
+}

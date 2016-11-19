@@ -1,0 +1,80 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.ad_event.body
+    - field.field.node.ad_event.field_event_enddate
+    - field.field.node.ad_event.field_event_id
+    - field.field.node.ad_event.field_event_image
+    - field.field.node.ad_event.field_event_link
+    - field.field.node.ad_event.field_event_location
+    - field.field.node.ad_event.field_event_rrule
+    - field.field.node.ad_event.field_event_startdate
+    - field.field.node.ad_event.field_event_subtitle
+    - node.type.ad_event
+  module:
+    - datetime
+    - image
+    - link
+    - text
+    - user
+id: node.ad_event.default
+targetEntityType: node
+bundle: ad_event
+mode: default
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 5
+    settings: {  }
+    third_party_settings: {  }
+  field_event_image:
+    weight: 3
+    label: hidden
+    settings:
+      image_style: ''
+      image_link: ''
+    third_party_settings: {  }
+    type: image
+  field_event_link:
+    weight: 6
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
+  field_event_location:
+    weight: 2
+    label: inline
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+  field_event_startdate:
+    weight: 1
+    label: inline
+    settings:
+      format_type: medium
+      timezone_override: ''
+    third_party_settings: {  }
+    type: datetime_default
+  field_event_subtitle:
+    weight: 0
+    label: hidden
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+  links:
+    weight: 8
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  field_event_enddate: true
+  field_event_id: true
+  field_event_rrule: true

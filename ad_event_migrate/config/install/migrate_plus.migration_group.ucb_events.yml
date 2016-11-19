@@ -1,0 +1,7 @@
+id: ucb_events
+label: UC Berkeley Events
+description: .
+source_type: UC Berkeley Events feed.
+# shared_configuration:
+#   source:
+#     key: default

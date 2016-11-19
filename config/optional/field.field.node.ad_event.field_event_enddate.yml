@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_event_enddate
+    - node.type.ad_event
+  module:
+    - datetime
+id: node.ad_event.field_event_enddate
+field_name: field_event_enddate
+entity_type: node
+bundle: ad_event
+label: 'End Date & Time'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

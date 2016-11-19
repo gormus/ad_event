@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * @file
+ * Contains sag_helper.module.
+ */
+
+use Drupal\Core\Url;
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function ad_event_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the sag_helper module.
+    case 'help.page.ad_event':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Berkeley Events') . '</p>';
+      return $output;
+
+    default:
+  }
+}

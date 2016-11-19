@@ -1,0 +1,5 @@
+name: Berkeley Events
+type: module
+description: Event content-type used to store imported UC Berkeley Events.
+core: 8.x
+package: UC Berkeley A+D
